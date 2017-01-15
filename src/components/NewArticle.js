@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import AuthService from '../services/AuthService';
+import ArticleService from '../services/ArticleService';
 
 class NewArticle extends Component { 
 	constructor() {
@@ -14,30 +15,18 @@ class NewArticle extends Component {
 
 	addArticle(event) {
 		event.preventDefault();
+		const article = {
+			title: this.refs.title.value,
+			description: this.refs.description.value,
+			link: this.refs.link.value,
+			image: this.refs.image.value,
+		};
+		ArticleService.addArticle(article)
+			.then(()=> {
 
+			}).catch(() => {
 
-      	const title = this.refs.title.value;
-      	const description = this.refs.description.value;
-      	const link = this.refs.link.value;
-      	const image = this.refs.image.value;
-
-		/*fetch(`${config.apiUrl}articles`, {
-			method: 'POST',
-	        headers: new Headers({
-	        }),
-	        body: JSON.stringify({ 
-	        	title: title, 
-	        	description: description,
-	        	link: link,
-	        	image: image
-	        })
-		})
-			.then((response) => {
-				//redirect
-			})
-			.catch((error) => {
-				console.log(error);
-			});*/
+			});
 	}
 
 	render() { 
@@ -47,7 +36,7 @@ class NewArticle extends Component {
 				<div>
 					<h2 className="page-title">New article</h2>
 					<div className="article-form">
-					    <form onSubmit={this.addArticle}>
+					    <form onSubmit={this.addArticle} encType="multipart/form-data">
 					        <label htmlFor="title">Title:</label>
 					        <div className="input-wrapper">
 					            <input id="title" ref="title" type="text" name="title" required="" placeholder="Title" className="input"/>
