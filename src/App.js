@@ -4,7 +4,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-          <header>
+          <header className="site-header">
               <h1 className="site-header__logo">News</h1>
           </header>
           <div className="site-content">

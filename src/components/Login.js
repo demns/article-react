@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
-import config from '../configs/config.json';
+import AuthService from '../services/AuthService';
 
 class Login extends Component { 
 	constructor() {
 		super();
+
+		this.state = {
+			error: false,
+			loggedIn: AuthService.loggedIn()
+		}
 
 		this.login = this.login.bind(this);
 	}
@@ -12,46 +17,53 @@ class Login extends Component {
 	login(event) {
 		event.preventDefault();
 
-      	const username = this.refs.username.value;
-      	const password = this.refs.password.value;
+      	const self = this;
+      	const username = self.refs.username.value;
+      	const password = self.refs.password.value;
 
-		fetch(`${config.apiUrl}login`, {
-			method: 'POST',
-	        headers: new Headers({
-	          'Accept': 'application/json',
-	          'Content-Type': 'application/json'
-	        }),
-	        body: JSON.stringify({ username: username, password: password})
-		})
-			.then((response) => {
-				//redirect
-			})
-			.catch((error) => {
-				console.log(error);
+		AuthService.login(username, password)
+			.then(() => {
+				self.props.router.replace('/');
+			}).catch((error) => {
+				this.setState({
+					error: true
+				})
 			});
 	}
 
 	render() { 
 		return (
 		    <div>
-		        <h2 className="page-title">Login</h2>
-		        <div className="login-form">
-			        <form onSubmit={this.login}>
-			            <div className="input-wrapper">
-			            	<input id="username" ref="username" className="input" type='text' name='username' required=''/>
-			            </div>
-			            <div className="input-wrapper">
-			            	<input id="password" className="input" ref="password" type='password' name='password' required='' placeholder='Password'/>
-			            </div>
-			          	<input className="button" type='submit' value='Login'/>
-			        </form>
-		        </div>
-		      	<p>
-		      		<Link to={'/registration'}>Registration</Link>
-		      	</p>
+		    	{this.state.loggedIn ? (
+		    		<div>
+		    			<p>You are logged in now</p>
+		    			<Link to={'/'}>Home page</Link>
+		    		</div>
+		    	) : (
+		    		<div>
+		    			<h2 className="page-title">Login</h2>
+				        <div className="login-form">
+					        <form onSubmit={this.login}>
+					            <div className="input-wrapper">
+					            	<input id="username" ref="username" className="input" type='text' name='username' required=''/>
+					            </div>
+					            <div className="input-wrapper">
+					            	<input id="password" className="input" ref="password" type='password' name='password' required='' placeholder='Password'/>
+					            </div>
+					            {this.state.error && (
+		            				<p className="error-messsage">Bad login information</p>
+		          				)}
+					          	<input className="button" type='submit' value='Login'/>
+					        </form>
+				        </div>
+				      	<p>
+				      		<Link to={'/registration'}>Registration</Link>
+				      	</p>
+		    		</div>
+		    	)}		        
 		    </div>
 		); 
 	} 
 } 
 
-module.exports = Login;
+export default Login;

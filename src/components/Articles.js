@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import config from '../configs/config.json';
 import { Link } from 'react-router';
+import AuthService from '../services/AuthService';
 
 class Articles extends Component {
 
     constructor() {
         super();
         this.state = {
-            articles: []
+            articles: [],
+            loggedIn: AuthService.loggedIn()
         };
     }
 
@@ -24,7 +26,14 @@ class Articles extends Component {
     render() {
       return (
         <div>
-          <Link to={'/login'}>Login</Link>
+          {!this.state.loggedIn ? (
+              <Link to={'/login'}>Login</Link>
+          ) : (
+              <div>
+                  <Link to={'/new-article'}>Add new article</Link>
+                  <Link to={'/logout'}>Logout</Link>
+              </div>
+          )}
           <h2 className="page-title">Last article</h2>
           <ul className="article-list">
           {this.state.articles.map((article, index) => {
