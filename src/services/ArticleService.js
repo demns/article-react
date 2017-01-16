@@ -10,6 +10,7 @@ module.exports = {
 
 		const sendData = {
 			method: 'POST', 
+			credentials: 'include',
 	        body: formData
 		};
 

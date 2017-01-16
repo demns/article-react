@@ -22,10 +22,10 @@ class NewArticle extends Component {
 			image: this.refs.image.value,
 		};
 		ArticleService.addArticle(article)
-			.then(()=> {
-
-			}).catch(() => {
-
+			.then((thing)=> {
+				console.log(thing)
+			}).catch((thing) => {
+				console.log(thing)
 			});
 	}
 
